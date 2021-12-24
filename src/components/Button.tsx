@@ -1,15 +1,25 @@
 import * as React from 'react'
+import './Button.style.css'
 
 interface ButtonProps {
-    title?: string
+    text?: string
     isFileType?: boolean
     onClick?(event: React.MouseEvent<HTMLButtonElement>): void
     onChange?(event: React.FormEvent<HTMLInputElement>): void
+    type?: 'DEFAULT' | 'SELECTED'
 }
 
 const Button: React.FC<ButtonProps> = props => {
+    const getButtonStyle = (type: 'DEFAULT' | 'SELECTED') => {
+        switch(type) {
+            case 'DEFAULT':
+                return 'default'
+            case 'SELECTED':
+                return 'selected'
+        }
+    }
     const button = () => (
-        <button onClick={props.onClick} onChange={props.onChange} title={props.title}>I am a button called {props.title}</button>
+        <button className={`button ${props.type && getButtonStyle(props.type)}`} onClick={props.onClick} onChange={props.onChange}>{props.text}</button>
     )
     const fileButton = () => (
         <input type="file" accept="application/json" onClick={props.onClick} onChange={props.onChange} />

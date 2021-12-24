@@ -1,20 +1,29 @@
+import { populateByName } from "./helpers/populateByName"
+
 figma.showUI(__html__);
 
 figma.ui.onmessage = (msg) => {
-  if (msg.type === "create-rectangles") {
-    const nodes = [];
 
-    for (let i = 0; i < msg.count; i++) {
-      const rect = figma.createRectangle();
-      rect.x = i * 150;
-      rect.fills = [{ type: "SOLID", color: { r: 1, g: 0.5, b: 0 } }];
-      figma.currentPage.appendChild(rect);
-      nodes.push(rect);
+  const isSelectionLength = figma.currentPage.selection.length !== 0;
+
+  if (msg.type === "populate") {
+    // Check if something selected
+
+    let selectedArray = msg.selected;
+    const selection = figma.currentPage.selection;
+    const obj = msg.obj;
+
+    // POPULATE
+    if (!isSelectionLength) {
+      figma.notify(`Select frames/groups to populate matches`, { timeout: 3000, error: true });
+    } else {
+      if (selectedArray.length > 0) {
+        selectedArray.map(selectedItem => {
+          populateByName(selection, obj, selectedItem);
+        });
+      } else {
+        figma.notify(`Select keys to populate`, { timeout: 3000, error: true });
+      }
     }
-
-    figma.currentPage.selection = nodes;
-    figma.viewport.scrollAndZoomIntoView(nodes);
   }
-
-  figma.closePlugin();
 };
