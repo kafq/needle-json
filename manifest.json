@@ -1,8 +1,8 @@
 {
-  "name": "Soup X JSON",
-  "id": "1055451405021398058",
-  "api": "1.0.0",
-  "main": "dist/code.js",
-  "ui": "dist/ui.html",
-  "editorType": ["figma"]
+	"name": "Soup X JSON",
+	"id": "1055451405021398058",
+	"api": "1.0.0",
+	"main": "dist/code.js",
+	"ui": "dist/ui.html",
+	"editorType": ["figma"]
 }
