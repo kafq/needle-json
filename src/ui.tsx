@@ -1,6 +1,7 @@
 import * as React from 'react'
-import { useState, useEffect } from 'react'
+import { useState } from 'react'
 import * as ReactDOM from 'react-dom'
+
 import { Button } from './components/Button'
 import { PropertiesControl } from './components/PropertiesControl'
 import './ui.css'
