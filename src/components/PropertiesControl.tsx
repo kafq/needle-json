@@ -46,10 +46,14 @@ const PropertiesControl: React.FC<Props> = props => {
 	}
 
 	return (
-		<div>
-			{renderButtons()}
-			<Button onClick={() => props.onSubmit(selectedKeys)} text="Populatesss" />
-		</div>
+		<>
+			<div className="properties">{renderButtons()}</div>
+			<Button
+				className="btn-primary"
+				onClick={() => props.onSubmit(selectedKeys)}
+				text="Populate"
+			/>
+		</>
 	)
 }
 

@@ -1,6 +1,9 @@
 import { populateByName } from "./helpers/populateByName"
 
-figma.showUI(__html__)
+figma.showUI(__html__, {
+	width: 400,
+	height: 700,
+})
 
 figma.ui.onmessage = msg => {
 	const isSelectionLength = figma.currentPage.selection.length !== 0

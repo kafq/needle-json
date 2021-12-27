@@ -6,14 +6,8 @@ import { Button } from "./components/Button"
 import { PropertiesControl } from "./components/PropertiesControl"
 import "./ui.css"
 
-declare function require(path: string): any
-
 const App = () => {
 	const [JSONobj, setJSONobj] = useState(null)
-
-	const onCancel = () => {
-		parent.postMessage({ pluginMessage: { type: "cancel" } }, "*")
-	}
 
 	const handleChangeButton = e => {
 		let fileReader = new FileReader()
@@ -55,19 +49,16 @@ const App = () => {
 			"*"
 		)
 	}
-
 	return (
-		<div>
-			<img src={require("./logo.svg")} />
-			<h2>Rectangle Creator</h2>
+		<main className="container">
+			<h2>Soup X JSON</h2>
 			{JSONobj ? (
 				<PropertiesControl obj={JSONobj} onSubmit={handlePopulate} />
 			) : (
 				<div>No object provided</div>
 			)}
 			<Button isFileType onChange={handleChangeButton} onClick={() => {}} />
-			<button onClick={onCancel}>Cancel</button>
-		</div>
+		</main>
 	)
 }
 

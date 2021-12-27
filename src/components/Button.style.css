@@ -1,14 +1,16 @@
-.button {
-	padding: 12px;
-	border: 2px solid black;
-	border-radius: 4px;
-}
-
 .selected {
 	background: black;
 	color: white;
 }
 
 .default {
-	background: gray;
+	background: white;
+	color: black;
+}
+
+.btn-primary {
+	width: 100%;
+	background: black;
+	color: white;
+	border-radius: 5px;
 }

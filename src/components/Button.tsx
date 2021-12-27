@@ -7,6 +7,7 @@ interface ButtonProps {
 	onClick?(event: React.MouseEvent<HTMLButtonElement>): void
 	onChange?(event: React.FormEvent<HTMLInputElement>): void
 	type?: "DEFAULT" | "SELECTED"
+	className?: string
 }
 
 const Button: React.FC<ButtonProps> = props => {
@@ -20,7 +21,9 @@ const Button: React.FC<ButtonProps> = props => {
 	}
 	const button = () => (
 		<button
-			className={`button ${props.type && getButtonStyle(props.type)}`}
+			className={`button ${props.type && getButtonStyle(props.type)} ${
+				props.className && props.className
+			}`}
 			onClick={props.onClick}
 			onChange={props.onChange}
 		>
