@@ -14,7 +14,7 @@ interface Key {
 }
 
 const PropertiesControl: React.FC<Props> = props => {
-	const [selectedKeys, setSelectedKeys] = useState<Key[]>([])
+	const [selectedKeys, setSelectedKeys] = useState<Key>({})
 	useEffect(() => {
 		if (props.obj) {
 			setSelectedKeys(
@@ -25,6 +25,14 @@ const PropertiesControl: React.FC<Props> = props => {
 			)
 		}
 	}, [props.obj])
+
+	const selectAll = () => {
+		const selected = {}
+		Object.keys(selectedKeys).map(k => {
+			selected[k] = true
+		})
+		setSelectedKeys(selected)
+	}
 
 	const renderButtons = () => {
 		return Object.keys(props.obj[0]).map(i => {
@@ -48,6 +56,7 @@ const PropertiesControl: React.FC<Props> = props => {
 	return (
 		<>
 			<div className="properties">{renderButtons()}</div>
+			<Button className="btn-secondary" onClick={selectAll} text="Select all" />
 			<Button
 				className="btn-primary"
 				onClick={() => props.onSubmit(selectedKeys)}
