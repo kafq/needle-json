@@ -1,62 +1,69 @@
-const delimiter = ", "
+const DELIMITER = ", "
 
 const populateByName = (selectedLayers, JSONobj, selectedItem) => {
 	let layerCount = 0
 
 	const loopSelected = arr => {
-		arr.map(item => {
+		arr.map(figNode => {
 			const JSONItemVal = JSONobj[layerCount]?.[selectedItem]
+
+			// If the node is text, just change its contents
 			if (
-				item.name.toUpperCase() === selectedItem.toUpperCase() &&
-				item.type === "TEXT" &&
-				JSONItemVal?.toString().split("-")[0] !== "VARIANT"
+				figNode.name.toUpperCase() === selectedItem.toUpperCase() &&
+				figNode.type === "TEXT"
 			) {
-				figma.loadFontAsync(item.fontName).then(() => {
+				// JSON value did not contain any specific parameters
+				// Simply change layer's contents
+				figma.loadFontAsync(figNode.fontName).then(() => {
 					if (typeof JSONobj[layerCount] !== "undefined") {
-						item.characters = JSONItemVal.toString()
+						figNode.characters = JSONItemVal.toString()
 						layerCount = ++layerCount
 					}
 				})
 			}
 
 			if (
-				item.name.toUpperCase() === selectedItem.toUpperCase() &&
-				item.type !== "TEXT" &&
+				figNode.name.toUpperCase() === selectedItem.toUpperCase() &&
 				typeof JSONItemVal === "boolean"
 			) {
-				item.visible = JSONobj[layerCount]?.[selectedItem] ? true : false
+				figNode.visible = JSONobj[layerCount]?.[selectedItem] ? true : false
 				layerCount = ++layerCount
 			}
 
 			if (
-				item.name.toUpperCase() === selectedItem.toUpperCase() &&
-				item.mainComponent?.parent?.type === "COMPONENT_SET" &&
-				JSONItemVal?.toString().split("-")[0] === "VARIANT"
+				figNode.name.toUpperCase() === selectedItem.toUpperCase() &&
+				JSONItemVal?.toString().split("-")[0] === "VARIANT" &&
+				figNode.mainComponent?.parent?.type === "COMPONENT_SET"
 			) {
+				// Parent contains variants
+				// Figma variant component names is composed as:
+				// Property_1=Value 1, Property_2=Value 2
+				// using ", " is a delimiter
+
 				let propertyIndex = -1
 				const propertyName = JSONItemVal.split("-")[1]
-				const nodeProperties = item.mainComponent.name.split("-")
+				const nodeProperties = figNode.mainComponent.name.split(DELIMITER)
+				// check if variant contains required property
 				propertyIndex = nodeProperties.findIndex(i =>
 					i.startsWith(`${propertyName}=`)
 				)
-				const propertyValue = JSONItemVal.split("-")[2]
-
+				const newValue = JSONItemVal.split("-")[2]
 				if (propertyIndex !== -1) {
-					nodeProperties[propertyIndex] = `${propertyName}=${propertyValue}`
-					const newVariantName = nodeProperties.join("")
-					const newVariant = item.mainComponent.parent.findChild(
-						i => i.name === newVariantName
+					// replace old property with new one
+					nodeProperties[propertyIndex] = `${propertyName}=${newValue}`
+					const newNodeName = nodeProperties.join(DELIMITER)
+					const newVariant = figNode.mainComponent.parent.findChild(
+						i => i.name === newNodeName
 					)
 					if (newVariant) {
-						console.log("Attempting swap")
-						item.swapComponent(newVariant)
+						figNode.swapComponent(newVariant)
 						layerCount = ++layerCount
 					}
 				}
 			}
 
-			if (item.children) {
-				loopSelected(item.children)
+			if (figNode.children) {
+				loopSelected(figNode.children)
 			}
 			return
 		})
