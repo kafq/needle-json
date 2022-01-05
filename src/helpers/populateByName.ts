@@ -1,24 +1,40 @@
 const DELIMITER = ", "
 
-const populateByName = (selectedLayers, JSONobj, selectedItem) => {
-	let layerCount = 0
-
+const changeFrameName = (selectedLayers, JSONobj) => {
+	let keyCount = 0
 	const loopSelected = arr => {
 		arr.map(figNode => {
-			const JSONItemVal = JSONobj[layerCount]?.[selectedItem]
+			if (
+				figNode.parent.type === "PAGE" &&
+				JSONobj[keyCount]?.hasOwnProperty("_frameName")
+			) {
+				figNode.name = JSONobj[keyCount]._frameName
+				keyCount++
+			}
+		})
+	}
+	loopSelected(selectedLayers)
+}
 
+const populateByName = (selectedLayers, JSONobj, selectedItem) => {
+	let keyCount = 0
+	console.log(selectedItem)
+	const loopSelected = arr => {
+		arr.map(figNode => {
+			const JSONItemVal = JSONobj[keyCount]?.[selectedItem]
 			// If the node is text, just change its contents
 			if (
 				figNode.name.toUpperCase() === selectedItem.toUpperCase() &&
-				figNode.type === "TEXT"
+				figNode.type === "TEXT" &&
+				selectedItem !== "_frameName" &&
+				typeof JSONobj[keyCount] !== "undefined" &&
+				JSONobj[keyCount][selectedItem]
 			) {
 				// JSON value did not contain any specific parameters
 				// Simply change layer's contents
 				figma.loadFontAsync(figNode.fontName).then(() => {
-					if (typeof JSONobj[layerCount] !== "undefined") {
-						figNode.characters = JSONItemVal.toString()
-						layerCount = ++layerCount
-					}
+					figNode.characters = JSONobj[keyCount]?.[selectedItem].toString()
+					keyCount = ++keyCount
 				})
 			}
 
@@ -26,8 +42,8 @@ const populateByName = (selectedLayers, JSONobj, selectedItem) => {
 				figNode.name.toUpperCase() === selectedItem.toUpperCase() &&
 				typeof JSONItemVal === "boolean"
 			) {
-				figNode.visible = JSONobj[layerCount]?.[selectedItem] ? true : false
-				layerCount = ++layerCount
+				figNode.visible = JSONobj[keyCount]?.[selectedItem] ? true : false
+				keyCount = ++keyCount
 			}
 
 			if (
@@ -57,9 +73,9 @@ const populateByName = (selectedLayers, JSONobj, selectedItem) => {
 					)
 					if (newVariant) {
 						figNode.swapComponent(newVariant)
-						layerCount = ++layerCount
 					}
 				}
+				keyCount++
 			}
 
 			if (figNode.children) {
@@ -71,4 +87,4 @@ const populateByName = (selectedLayers, JSONobj, selectedItem) => {
 	loopSelected(selectedLayers)
 }
 
-export { populateByName }
+export { changeFrameName, populateByName }

@@ -1,4 +1,4 @@
-import { populateByName } from "./helpers/populateByName"
+import { changeFrameName, populateByName } from "./helpers/populateByName"
 
 figma.showUI(__html__, {
 	width: 400,
@@ -24,6 +24,9 @@ figma.ui.onmessage = msg => {
 		} else {
 			if (selectedArray.length > 0) {
 				selectedArray.map(selectedItem => {
+					if (selectedItem === "_frameName") {
+						changeFrameName(selection, obj)
+					}
 					populateByName(selection, obj, selectedItem)
 				})
 			} else {
