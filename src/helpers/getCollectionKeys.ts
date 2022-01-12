@@ -1,3 +1,5 @@
+// Gathers all keys used in the whole JSON array
+
 const getCollectionKeys = arr => {
 	const keys = []
 	arr.map(i => {

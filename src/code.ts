@@ -1,3 +1,5 @@
+import { setEnvironmentData } from "worker_threads"
+import { fillInEmptyKeys } from "./helpers/fillInEmptyKeys"
 import { changeFrameName, populateByName } from "./helpers/populateByName"
 
 figma.showUI(__html__, {
@@ -23,11 +25,13 @@ figma.ui.onmessage = msg => {
 			})
 		} else {
 			if (selectedArray.length > 0) {
+				const nonEmptyArray = fillInEmptyKeys(obj, selectedArray)
+				console.log(nonEmptyArray)
 				selectedArray.map(selectedItem => {
 					if (selectedItem === "_frameName") {
 						changeFrameName(selection, obj)
 					}
-					populateByName(selection, obj, selectedItem)
+					populateByName(selection, nonEmptyArray, selectedItem)
 				})
 			} else {
 				figma.notify(`Select keys to populate`, { timeout: 3000, error: true })
